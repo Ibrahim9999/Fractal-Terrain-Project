@@ -8,11 +8,16 @@ namespace Fractal_Terrain_Project
 	public class ColorPalette
 	{
 		public List<Color> colors;
-		public int currentIndex;
+		int currentIndex;
 		
 		public ColorPalette(List<Color> colors)
 		{
 			this.colors = colors;
+		}
+		
+		public void SetCurrentIndex(int index)
+		{
+			currentIndex = index;
 		}
 		
 		public Color GetColor()
@@ -72,6 +77,11 @@ namespace Fractal_Terrain_Project
 				return Color.FromArgb(t, p, v);
 			
 			return Color.FromArgb(v, p, q);
+		}
+		
+		public static Color GetRandomColor()
+		{
+			return Color.FromArgb(Calculate.RandInt(0, 255), Calculate.RandInt(0, 255), Calculate.RandInt(0, 255));
 		}
 		
 		public static Bitmap GrayscaleToFalseColor(Bitmap pic)

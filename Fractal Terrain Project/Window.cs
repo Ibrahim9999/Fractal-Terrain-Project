@@ -103,12 +103,12 @@ namespace Fractal_Terrain_Project
 			
 			/* */
 			//var lorenz = new LorenzAttractor(new Point(.1,.1,0), true, 1000, 100000, .001, 0, 0, 0, 0);
-			var lorenz = new LorenzAttractor(new Point(.0001,0,0), true, 1500, 100000, .001, 10, 28, 8d/3);
+			//var lorenz = new LorenzAttractor(new Point(.0001,0,0), true, 1500, 100000, .001, 10, 28, 8d/3);
+			var lorenz = new LorenzAttractor(new Point(.0001,0,0), true, 10000, 100000, .001, 17.3580000000001, 28.044, 3.3106666666666);
 			//var lorenz = new LorenzAttractor(new Point(.0001,0,0), true, 1000, 100000, .001, 52.308, 24.088, 8d/3);
 			lorenz.currentDisplay.Add(DisplayType.POINTS);
 			
 			objects.Add(lorenz);
-			
 		}
 		
 		// Initializes camera values

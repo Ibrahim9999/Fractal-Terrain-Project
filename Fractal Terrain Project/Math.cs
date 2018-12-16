@@ -423,6 +423,11 @@ namespace Fractal_Terrain_Project
 			get { return triangles.Count; }
 		}
     	
+    	public void Add(Triangle triangle)
+    	{
+    		triangles.Add(triangle);
+    	}
+    	
     	public void MakeFromWireframe(Wireframe wireframe)
     	{
     		triangles = new List<Triangle>();
@@ -469,6 +474,11 @@ namespace Fractal_Terrain_Project
 		{
 			get { return quads.Count; }
 		}
+    	
+    	public void Add(Quad quad)
+    	{
+    		quads.Add(quad);
+    	}
     	
     	public void MakeFromWireframe(Wireframe wireframe)
     	{
@@ -1961,6 +1971,16 @@ namespace Fractal_Terrain_Project
 	
 	public static class Calculate
 	{
+		public static int RandInt(int min, int max)
+		{
+			return (new Random().Next() % (max - min + 1)) + min;
+		}
+		
+		public static double RandDouble(double min, double max)
+		{
+			return (new Random().NextDouble()) * (max - min) + min;
+		}
+		
 		public static int DecimalCount(double val)
 		{
 			int i = 0;

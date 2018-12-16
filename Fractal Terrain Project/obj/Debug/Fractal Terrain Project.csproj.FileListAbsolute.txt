@@ -18,3 +18,13 @@ C:\Users\Ibrahim\Documents\Fractal Terrain Generation C#\Fractal Terrain Project
 C:\Users\Ibrahim\Documents\Fractal Terrain Generation C#\Fractal Terrain Project\obj\Debug\Fractal Terrain Project.csprojResolveAssemblyReference.cache
 C:\Users\Ibrahim\Documents\Fractal Terrain Generation C#\Fractal Terrain Project\obj\Debug\Fractal Terrain Project.exe
 C:\Users\Ibrahim\Documents\Fractal Terrain Generation C#\Fractal Terrain Project\obj\Debug\Fractal Terrain Project.pdb
+C:\Users\Ibrahim\Documents\Fractal-Terrain-Project\Fractal Terrain Project\obj\Debug\Fractal Terrain Project.csprojResolveAssemblyReference.cache
+C:\Users\Ibrahim\Documents\Fractal-Terrain-Project\Fractal Terrain Project\obj\Debug\Fractal Terrain Project.exe
+C:\Users\Ibrahim\Documents\Fractal-Terrain-Project\Fractal Terrain Project\obj\Debug\Fractal Terrain Project.pdb
+C:\Users\Ibrahim\Documents\Fractal-Terrain-Project\Fractal Terrain Project\bin\Debug\Fractal Terrain Project.exe.config
+C:\Users\Ibrahim\Documents\Fractal-Terrain-Project\Fractal Terrain Project\bin\Debug\Fractal Terrain Project.exe
+C:\Users\Ibrahim\Documents\Fractal-Terrain-Project\Fractal Terrain Project\bin\Debug\Fractal Terrain Project.pdb
+C:\Users\Ibrahim\Documents\Fractal-Terrain-Project\Fractal Terrain Project\bin\Debug\NCalc.dll
+C:\Users\Ibrahim\Documents\Fractal-Terrain-Project\Fractal Terrain Project\bin\Debug\OpenTK.dll
+C:\Users\Ibrahim\Documents\Fractal-Terrain-Project\Fractal Terrain Project\bin\Debug\OpenTK.pdb
+C:\Users\Ibrahim\Documents\Fractal-Terrain-Project\Fractal Terrain Project\bin\Debug\OpenTK.xml

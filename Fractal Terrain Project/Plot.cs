@@ -13,7 +13,7 @@ namespace Fractal_Terrain_Project
 	/// 
 	public enum PlotType
 	{
-		NONE = 0, STANDARD_EQUATION, PARAMETRIC_EQUATION, FRACTAL, STRANGE_ATTRACTOR,
+		NONE = 0, STANDARD_EQUATION, PARAMETRIC_EQUATION, FRACTAL, STRANGE_ATTRACTOR, TERRAIN
 	}
 	
 	public enum EquationType
@@ -39,6 +39,11 @@ namespace Fractal_Terrain_Project
 	public enum StrangeAttractorType
 	{
 		NONE = 0, LORENZ, PICKOVER, CLIFFORD, ROSSLER
+	}
+	
+	public enum NoiseType
+	{
+		NONE = 0, RANDOM, PERLIN, SIMPLEX
 	}
 	
 	public enum DisplayType
@@ -92,6 +97,11 @@ namespace Fractal_Terrain_Project
 		public bool IsStrangeAttractor()
 		{
 			return plotType == PlotType.STRANGE_ATTRACTOR;
+		}
+		
+		public bool IsTerrain()
+		{
+			return plotType == PlotType.TERRAIN;
 		}
 		
 		public void ZoomObject(ref Camera camera)
@@ -359,7 +369,7 @@ namespace Fractal_Terrain_Project
 		public override void Generate()
 		{
 			colors = new List<Color>();
-			colorPalette.currentIndex = 0;
+			colorPalette.SetCurrentIndex(0);
 			currentIteration = 0;
 			pointList = new PointList(new List<Point>());
 			polyline = new Polyline(new List<Point>());
@@ -1004,6 +1014,169 @@ namespace Fractal_Terrain_Project
 			FixPoint();
 			
 			currentIteration++;
+		}
+	}
+	
+	public sealed class TerrainMap : Plot
+	{
+		TriangleMesh triangles;
+		QuadMesh quads;
+		
+		Bitmap heightMap;
+		NoiseType noiseType;
+		int xRes = 400;
+		int yRes = 400;
+		
+		double maxTerrainHeight = 10;
+		double minTerrainHeight = -10;
+		
+		public TerrainMap(double minTerrainHeight = -10, double maxTerrainHeight = 10)
+		{
+			triangles = new TriangleMesh();
+			quadMesh = new QuadMesh();
+			
+			noiseType = NoiseType.NONE;
+			
+			this.minTerrainHeight = minTerrainHeight;
+			this.maxTerrainHeight = maxTerrainHeight;
+			
+			heightMap = new Bitmap(xRes, yRes);
+		}
+		public TerrainMap(NoiseType noiseType, double minTerrainHeight = -10, double maxTerrainHeight = 10)
+		{
+			triangles = new TriangleMesh();
+			quadMesh = new QuadMesh();
+			
+			this.noiseType = noiseType;
+			
+			this.minTerrainHeight = minTerrainHeight;
+			this.maxTerrainHeight = maxTerrainHeight;
+			
+			heightMap = new Bitmap(xRes, yRes);
+		}
+		public TerrainMap(int xRes, int yRes, double minTerrainHeight = -10, double maxTerrainHeight = 10)
+		{
+			triangles = new TriangleMesh();
+			quadMesh = new QuadMesh();
+			
+			noiseType = NoiseType.NONE;
+			
+			this.xRes = xRes;
+			this.yRes = yRes;
+			
+			this.minTerrainHeight = minTerrainHeight;
+			this.maxTerrainHeight = maxTerrainHeight;
+			
+			heightMap = new Bitmap(xRes, yRes);
+		}
+		public TerrainMap(int xRes, int yRes, NoiseType noiseType, double minTerrainHeight = -10, double maxTerrainHeight = 10)
+		{
+			triangles = new TriangleMesh();
+			quadMesh = new QuadMesh();
+			
+			this.noiseType = noiseType;
+			
+			this.xRes = xRes;
+			this.yRes = yRes;
+			
+			this.minTerrainHeight = minTerrainHeight;
+			this.maxTerrainHeight = maxTerrainHeight;
+			
+			heightMap = new Bitmap(xRes, yRes);
+		}
+		
+		public override string ToString()
+		{
+			throw new NotImplementedException();
+		}
+		
+		public Bitmap GetHeightmap()
+		{
+			return heightMap;
+		}
+		public NoiseType Noise
+		{
+			get { return noiseType; }
+		}
+		public int Width
+		{
+			get { return xRes; }
+		}
+		public int Height
+		{
+			get { return yRes; }
+		}
+		public double MinTerrainHeight
+		{
+			get { return minTerrainHeight; }
+		}
+		public double MaxTerrainHeight
+		{
+			get { return maxTerrainHeight; }
+		}
+		
+		public void GenerateHeightmap()
+		{
+			for (int y = 0; y < Height; y++)
+				for (int x = 0; x < Width; x++)
+					switch (noiseType)
+					{
+						case NoiseType.RANDOM:
+							heightMap.SetPixel(x, y, ColorPalette.GetRandomColor());
+							
+							break;
+						case NoiseType.PERLIN:
+							heightMap.SetPixel(x, y, PerlinNoise());
+							
+							break;
+						case NoiseType.SIMPLEX:
+							heightMap.SetPixel(x, y, SimplexNoise());
+							
+							break;
+						default:
+							heightMap.SetPixel(x, y, Color.Black);
+							
+							break;
+					}
+		}
+		
+		public override void Generate()
+		{
+			GenerateHeightmap();
+			
+			Point nwPoint = new Point(),
+				  nePoint = new Point(),
+				  sePoint = new Point(),
+				  swPoint = new Point();
+			
+			for (int i = 0; i < xRes - 1; i++)
+			{
+				for (int j = 0; j < yRes - 1; j++)
+				{
+					//Create point values
+					nwPoint = new Point(i, j, heightMap.GetPixel(i, j).GetSaturation());
+					nePoint = new Point(i, j + 1, heightMap.GetPixel(i, j + 1).GetSaturation());
+					sePoint = new Point(i + 1, j + 1, heightMap.GetPixel(i + 1, j + 1).GetSaturation());
+					swPoint = new Point(i + 1, j, heightMap.GetPixel(i + 1, j).GetSaturation());
+		
+					//Create triangles
+					triangles.Add(new Triangle(nwPoint, nePoint, sePoint));
+					triangles.Add(new Triangle(nwPoint, sePoint, swPoint));
+		
+					// Create quad
+					quads.Add(new Quad(nwPoint, nePoint, sePoint, swPoint));
+				}
+			}
+		}
+		
+		public static Color PerlinNoise()
+		{
+			return ColorPalette.GetRandomColor();
+		}
+		
+		public static Color SimplexNoise()
+		{
+			return ColorPalette.GetRandomColor();
 		}
 	}
 }
