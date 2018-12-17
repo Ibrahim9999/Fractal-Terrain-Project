@@ -53,6 +53,8 @@ namespace Fractal_Terrain_Project
 	
 	public abstract class Plot
 	{
+		public Random rand = new Random();
+		
 		public PlotType plotType;
 		public Comparison comparison;
 		public FractalType fractalType;
@@ -1138,6 +1140,11 @@ namespace Fractal_Terrain_Project
 			get { return maxTerrainHeight; }
 		}
 		
+		public static Color GetRandomColor(Random rand)
+		{
+			return Color.FromArgb(rand.Next(0, 255), rand.Next(0, 255), rand.Next(0, 255));
+		}
+		
 		public void GenerateHeightmap()
 		{
 			for (int y = 0; y < Height; y++)
@@ -1145,7 +1152,7 @@ namespace Fractal_Terrain_Project
 					switch (noiseType)
 					{
 						case NoiseType.RANDOM:
-							heightMap.SetPixel(x, y, ColorPalette.GetRandomColor());
+							heightMap.SetPixel(x, y, GetRandomColor(rand));
 							
 							break;
 						case NoiseType.PERLIN:
@@ -1181,7 +1188,7 @@ namespace Fractal_Terrain_Project
 			// Create points
 			for (int i = 0; i < xRes; i++)
 				for (int j = 0; j < yRes; j++)
-					grid[i,j] = new Point(((double)i/(xRes-1)) * 20 - 10, ((double)j/(yRes-1)) * 20 - 10, heightMap.GetPixel(i, j).GetHue()/360 * 20 -10);
+					grid[i,j] = new Point(((double)i/(xRes-1)) * 20 - 10, ((double)j/(yRes-1)) * 20 - 10, heightMap.GetPixel(i, j).GetSaturation() * 4 -2);
 			
 			for (int i = 0; i < xRes - 1; i++)
 				for (int j = 0; j < yRes - 1; j++)
