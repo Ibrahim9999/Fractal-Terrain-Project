@@ -110,7 +110,7 @@ namespace Fractal_Terrain_Project
 			
 			objects.Add(lorenz); */
 			
-			var terrain = new TerrainMap(10, 10, NoiseType.NONE, -10, 10);
+			var terrain = new TerrainMap(10, 10, NoiseType.RANDOM, -10, 10);
 			terrain.currentDisplay.Add(DisplayType.QUADS);
 			
 			objects.Add(terrain);

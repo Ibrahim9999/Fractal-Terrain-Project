@@ -1104,7 +1104,7 @@ namespace Fractal_Terrain_Project
 			
 			this.minTerrainHeight = minTerrainHeight;
 			this.maxTerrainHeight = maxTerrainHeight;
-			
+			Console.WriteLine(noiseType);
 			heightMap = new Bitmap(xRes, yRes);
 		}
 		
@@ -1179,14 +1179,15 @@ namespace Fractal_Terrain_Project
 			var grid = new Point[xRes,yRes];
 			
 			// Create points
-			for (int i = 0; i < xRes - 1; i++)
-				for (int j = 0; j < yRes - 1; j++)
-					grid[i,j] = new Point(((double)i/xRes) * 20 - 10, ((double)j/xRes) * 20 - 10, heightMap.GetPixel(i, j).GetSaturation() * 20);
+			for (int i = 0; i < xRes; i++)
+				for (int j = 0; j < yRes; j++)
+					grid[i,j] = new Point(((double)i/(xRes-1)) * 20 - 10, ((double)j/(yRes-1)) * 20 - 10, heightMap.GetPixel(i, j).GetHue()/360 * 20 -10);
 			
 			for (int i = 0; i < xRes - 1; i++)
 				for (int j = 0; j < yRes - 1; j++)
 				{
-					//Create point values
+				//Create point values
+				{
 					nwPoint = grid[i,j];
 					nePoint = grid[i + 1,j];
 					sePoint = grid[i + 1,j + 1];
@@ -1197,12 +1198,12 @@ namespace Fractal_Terrain_Project
 					triangleMesh.Add(new Triangle(nwPoint, sePoint, swPoint));
 		
 					// Create quad
-					quadMesh.Add(new Quad(nwPoint, nePoint, sePoint, swPoint));
+					quadMesh.Add(new Quad(nwPoint, nePoint, sePoint, swPoint));}
 				}
 		}
 		
 		public static Color PerlinNoise()
-		{
+		{Console.WriteLine(ColorPalette.GetRandomColor());
 			return ColorPalette.GetRandomColor();
 		}
 		

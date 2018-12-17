@@ -1971,14 +1971,16 @@ namespace Fractal_Terrain_Project
 	
 	public static class Calculate
 	{
-		public static int RandInt(int min, int max)
+		public static int RandInt(int d, int e)
 		{
-			return (new Random().Next() % (max - min + 1)) + min;
+			//var a = (int)DateTime.Now.Ticks%10000;
+			var a = 0;
+			return (int)e + (int)((d - e + 1) * new Random(a).NextDouble());
 		}
 		
 		public static double RandDouble(double min, double max)
 		{
-			return (new Random().NextDouble()) * (max - min) + min;
+			return (new Random((int)DateTime.Now.Ticks & 0x0000FFFF).NextDouble()) * (max - min) + min;
 		}
 		
 		public static int DecimalCount(double val)

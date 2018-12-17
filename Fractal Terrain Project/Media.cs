@@ -81,7 +81,8 @@ namespace Fractal_Terrain_Project
 		
 		public static Color GetRandomColor()
 		{
-			return Color.FromArgb(Calculate.RandInt(0, 255), Calculate.RandInt(0, 255), Calculate.RandInt(0, 255));
+			var random = new Random();
+			return Color.FromArgb(random.Next(0, 255), random.Next(0, 255), random.Next(0, 255));
 		}
 		
 		public static Bitmap GrayscaleToFalseColor(Bitmap pic)
