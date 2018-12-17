@@ -81,13 +81,9 @@ namespace Fractal_Terrain_Project
 		public float minZ;
 		public float maxZ;
 		
-		public double a;
-		public double b;
-		public double c;
-		public double d;
-		public double e;
-		public double f;
+		List<double> sliders = new List<double>(6);
 		public double t;
+		
 		
 		public bool IsEquation()
 		{
@@ -303,6 +299,19 @@ namespace Fractal_Terrain_Project
 			currentDisplay = new List<DisplayType>();
 		}
 		
+		public void AddSlider(double value)
+		{
+			sliders.Add(value);
+		}
+		public double GetSlider(int index)
+		{
+			return sliders[index];
+		}
+		public void SetSlider(int index, double value)
+		{
+			sliders[index] = value;
+		}
+		
 		public abstract override string ToString();
 		public abstract void Generate();
 	}
@@ -363,7 +372,7 @@ namespace Fractal_Terrain_Project
 		
 		public override string ToString()
 		{
-			return  (is3D ? "3D " : "") + strangeAttractorType + " Attractor:\n\tMaxIteration: " + maxIteration + "\n\tdT: " + t + "\n\tA: " + a + "\n\tB: " + b + "\n\tC: " + c + "\n\tD: " + d + "\n";
+			return  (is3D ? "3D " : "") + strangeAttractorType + " Attractor:\n\tMaxIteration: " + maxIteration + "\n\tdT: " + t + "\n\tA: " + GetSlider(0) + "\n\tB: " + GetSlider(1) + "\n\tC: " + GetSlider(1) + "\n\tD: " + GetSlider(3) + "\n";
 		}
 		
 		public override void Generate()
@@ -809,12 +818,12 @@ namespace Fractal_Terrain_Project
 			}
 			
 			eq.Parameters[vars[2]] = var4D;
-			eq.Parameters["a"] = a;
-			eq.Parameters["b"] = b;
-			eq.Parameters["c"] = c;
-			eq.Parameters["d"] = d;
-			eq.Parameters["e"] = e;
-			eq.Parameters["f"] = f;
+			eq.Parameters["a"] = GetSlider(0);
+			eq.Parameters["b"] = GetSlider(1);
+			eq.Parameters["c"] = GetSlider(2);
+			eq.Parameters["d"] = GetSlider(3);
+			eq.Parameters["e"] = GetSlider(4);
+			eq.Parameters["f"] = GetSlider(5);
 			
 			double result = 0;
 			
@@ -880,9 +889,9 @@ namespace Fractal_Terrain_Project
 			this.initialIterations = initialIterations;
 			this.maxIteration = maxIteration;
 			this.t = t;
-			this.a = a;
-			this.b = b;
-			this.c = c;
+			sliders.Add(a);
+			sliders.Add(b);
+			sliders.Add(c);
 			this.dynamicDraw = dynamicDraw;
 			this.is3D = is3D;
 			
@@ -891,9 +900,9 @@ namespace Fractal_Terrain_Project
 		
 		public override void NextPoint()
 		{
-			currentPoint +=  t * new Point(a * (currentPoint.Y - currentPoint.X),
-			                               -currentPoint.X * (currentPoint.Z - b) - currentPoint.Y,
-										   is3D ? currentPoint.X * currentPoint.Y - c * currentPoint.Z : 0);
+			currentPoint +=  t * new Point(GetSlider(0) * (currentPoint.Y - currentPoint.X),
+			                               -currentPoint.X * (currentPoint.Z - GetSlider(1)) - currentPoint.Y,
+										   is3D ? currentPoint.X * currentPoint.Y - GetSlider(2) * currentPoint.Z : 0);
 			
 			FixPoint();
 			
@@ -916,10 +925,10 @@ namespace Fractal_Terrain_Project
 			this.startPoint = startPoint;
 			this.initialIterations = initialIterations;
 			this.maxIteration = maxIteration;
-			this.a = a;
-			this.b = b;
-			this.c = c;
-			this.d = d;
+			sliders.Add(a);
+            sliders.Add(b);
+            sliders.Add(c);
+            sliders.Add(d);
 			this.dynamicDraw = dynamicDraw;
 			this.is3D = is3D;
 			
@@ -928,9 +937,9 @@ namespace Fractal_Terrain_Project
 		
 		public override void NextPoint()
 		{
-			currentPoint =  new Point(Math.Sin(a * currentPoint.Y) - currentPoint.Z * Math.Cos(b * currentPoint.X),
-			                 		  currentPoint.Z * Math.Sin(c * currentPoint.Y) - Math.Cos(d * currentPoint.X),
-			                 		  is3D ? e * Math.Sin(currentPoint.X): 0);
+			currentPoint =  new Point(Math.Sin(GetSlider(0) * currentPoint.Y) - currentPoint.Z * Math.Cos(GetSlider(1) * currentPoint.X),
+			                 		  currentPoint.Z * Math.Sin(GetSlider(2) * currentPoint.Y) - Math.Cos(GetSlider(3) * currentPoint.X),
+			                 		  is3D ? GetSlider(4) * Math.Sin(currentPoint.X): 0);
 			
 			FixPoint();
 			
@@ -953,10 +962,10 @@ namespace Fractal_Terrain_Project
 			this.startPoint = startPoint;
 			this.initialIterations = initialIterations;
 			this.maxIteration = maxIteration;
-			this.a = a;
-			this.b = b;
-			this.c = c;
-			this.d = d;
+			SetSlider(0, a);
+			SetSlider(1, b);
+			SetSlider(2, c);
+			SetSlider(3, d);
 			this.dynamicDraw = dynamicDraw;
 			this.is3D = is3D;
 			
@@ -965,9 +974,9 @@ namespace Fractal_Terrain_Project
 		
 		public override void NextPoint()
 		{
-			currentPoint =  new Point(Math.Sin(a * currentPoint.Y) + c * Math.Sin(a * currentPoint.X),
-			                 		  Math.Sin(b * currentPoint.X) + d * Math.Sin(b * currentPoint.Y),
-			                 		  is3D ? e * Math.Sin(currentPoint.X): 0);
+			currentPoint =  new Point(Math.Sin(GetSlider(0) * currentPoint.Y) + GetSlider(2) * Math.Sin(GetSlider(0) * currentPoint.X),
+			                 		  Math.Sin(GetSlider(1) * currentPoint.X) + GetSlider(3) * Math.Sin(GetSlider(1) * currentPoint.Y),
+			                 		  is3D ? GetSlider(4) * Math.Sin(currentPoint.X): 0);
 			
 			FixPoint();
 			
@@ -995,10 +1004,10 @@ namespace Fractal_Terrain_Project
 			this.startPoint = startPoint;
 			this.initialIterations = initialIterations;
 			this.maxIteration = maxIteration;
-			this.a = a;
-			this.b = b;
-			this.c = c;
-			this.d = d;
+			SetSlider(0, a);
+			SetSlider(1, b);
+			SetSlider(2, c);
+			SetSlider(3, d);
 			this.dynamicDraw = dynamicDraw;
 			this.is3D = is3D;
 			
@@ -1008,8 +1017,8 @@ namespace Fractal_Terrain_Project
 		public override void NextPoint()
 		{
 			currentPoint =  new Point(-currentPoint.Y - currentPoint.Z,
-			                 		  currentPoint.X + a * currentPoint.Y,
-			                 		  is3D ? b + currentPoint.Z * (currentPoint.X - c) : 0);
+			                 		  currentPoint.X + GetSlider(0) * currentPoint.Y,
+			                 		  is3D ? GetSlider(1) + currentPoint.Z * (currentPoint.X - GetSlider(1)) : 0);
 			
 			FixPoint();
 			

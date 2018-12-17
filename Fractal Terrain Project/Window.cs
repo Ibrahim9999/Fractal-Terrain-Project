@@ -437,22 +437,22 @@ namespace Fractal_Terrain_Project
 					p.t += valueShift * shiftFactor / 1000;
 			if (keyState.IsKeyDown(keyMap["parameterA"]))
 				foreach (Plot p in objects)
-					p.a += valueShift * shiftFactor;
+					p.sliders[0] += valueShift * shiftFactor;
 			if (keyState.IsKeyDown(keyMap["parameterB"]))
 				foreach (Plot p in objects)
-					p.b += valueShift * shiftFactor;
+					p.sliders[1] += valueShift * shiftFactor;
 			if (keyState.IsKeyDown(keyMap["parameterC"]))
 				foreach (Plot p in objects)
-					p.c += valueShift * shiftFactor;
+					p.sliders[2] += valueShift * shiftFactor;
 			if (keyState.IsKeyDown(keyMap["parameterD"]))
 				foreach (Plot p in objects)
-					p.d += valueShift * shiftFactor;
+					p.sliders[3] += valueShift * shiftFactor;
 			if (keyState.IsKeyDown(keyMap["parameterE"]))
 				foreach (Plot p in objects)
-					p.e += valueShift * shiftFactor;
+					p.sliders[4] += valueShift * shiftFactor;
 			if (keyState.IsKeyDown(keyMap["parameterF"]))
 				foreach (Plot p in objects)
-					p.f += valueShift * shiftFactor;
+					p.sliders[5] += valueShift * shiftFactor;
 			
 			// Transparency
 			if (keyState.IsKeyDown(keyMap["increaseTransparency"]) && alpha <= 1.0)
