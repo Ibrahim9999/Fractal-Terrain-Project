@@ -101,14 +101,19 @@ namespace Fractal_Terrain_Project
 			objects.Add(rossler);
 			*/
 			
-			/* */
+			/*
 			//var lorenz = new LorenzAttractor(new Point(.1,.1,0), true, 1000, 100000, .001, 0, 0, 0, 0);
 			//var lorenz = new LorenzAttractor(new Point(.0001,0,0), true, 1500, 100000, .001, 10, 28, 8d/3);
 			var lorenz = new LorenzAttractor(new Point(.0001,0,0), true, 10000, 100000, .001, 17.3580000000001, 28.044, 3.3106666666666);
 			//var lorenz = new LorenzAttractor(new Point(.0001,0,0), true, 1000, 100000, .001, 52.308, 24.088, 8d/3);
 			lorenz.currentDisplay.Add(DisplayType.POINTS);
 			
-			objects.Add(lorenz);
+			objects.Add(lorenz); */
+			
+			var terrain = new TerrainMap(10, 10, NoiseType.NONE, -10, 10);
+			terrain.currentDisplay.Add(DisplayType.QUADS);
+			
+			objects.Add(terrain);
 		}
 		
 		// Initializes camera values
@@ -288,7 +293,7 @@ namespace Fractal_Terrain_Project
 					{
 						p.ZoomObject(ref camera);
 						
-						camera.position = Camera.MoveAlongAxis(camera.target, camera.direction, Math.Min(p.minX-p.maxX, Math.Min(p.minY-p.maxY, p.minZ-p.maxZ)));
+						//camera.position = Camera.MoveAlongAxis(camera.target, camera.direction, Math.Min(p.minX-p.maxX, Math.Min(p.minY-p.maxY, p.minZ-p.maxZ)));
 					}
 			
 			// Movement
@@ -437,22 +442,28 @@ namespace Fractal_Terrain_Project
 					p.t += valueShift * shiftFactor / 1000;
 			if (keyState.IsKeyDown(keyMap["parameterA"]))
 				foreach (Plot p in objects)
-					p.sliders[0] += valueShift * shiftFactor;
+					if (p.GetSliderCount() >= 1)
+						p.AdjustSlider(0, valueShift * shiftFactor);
 			if (keyState.IsKeyDown(keyMap["parameterB"]))
 				foreach (Plot p in objects)
-					p.sliders[1] += valueShift * shiftFactor;
+					if (p.GetSliderCount() >= 2)
+						p.AdjustSlider(1, valueShift * shiftFactor);
 			if (keyState.IsKeyDown(keyMap["parameterC"]))
 				foreach (Plot p in objects)
-					p.sliders[2] += valueShift * shiftFactor;
+					if (p.GetSliderCount() >= 3)
+						p.AdjustSlider(2, valueShift * shiftFactor);
 			if (keyState.IsKeyDown(keyMap["parameterD"]))
 				foreach (Plot p in objects)
-					p.sliders[3] += valueShift * shiftFactor;
+					if (p.GetSliderCount() >= 4)
+						p.AdjustSlider(3, valueShift * shiftFactor);
 			if (keyState.IsKeyDown(keyMap["parameterE"]))
 				foreach (Plot p in objects)
-					p.sliders[4] += valueShift * shiftFactor;
+					if (p.GetSliderCount() >= 5)
+						p.AdjustSlider(4, valueShift * shiftFactor);
 			if (keyState.IsKeyDown(keyMap["parameterF"]))
 				foreach (Plot p in objects)
-					p.sliders[5] += valueShift * shiftFactor;
+					if (p.GetSliderCount() >= 6)
+						p.AdjustSlider(5, valueShift * shiftFactor);
 			
 			// Transparency
 			if (keyState.IsKeyDown(keyMap["increaseTransparency"]) && alpha <= 1.0)

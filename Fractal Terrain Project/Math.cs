@@ -149,7 +149,7 @@ namespace Fractal_Terrain_Project
     {
     	public List<PointList> points;
     	
-		public PointGrid(List<PointList> ps)
+    	public PointGrid(List<PointList> ps)
 		{
 			points = ps;
 		}

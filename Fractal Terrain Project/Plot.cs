@@ -154,7 +154,7 @@ namespace Fractal_Terrain_Project
 					currentDisplay.Add(DisplayType.LINES);
 			}
 			
-			if (currentDisplay.Contains(DisplayType.POINTS) && IsEquation())
+			if (currentDisplay.Contains(DisplayType.POINTS) && (IsEquation() || IsTerrain()))
 			{
 				GL.PointSize(size);
 				
@@ -190,7 +190,7 @@ namespace Fractal_Terrain_Project
 				GL.PointSize(1);
 			}
 			
-			if (currentDisplay.Contains(DisplayType.LINES) && IsEquation())
+			if (currentDisplay.Contains(DisplayType.LINES) && (IsEquation() || IsTerrain()))
 			{
 				var lines = wireframe.ToLines();
 				GL.LineWidth(size);
@@ -299,6 +299,11 @@ namespace Fractal_Terrain_Project
 			currentDisplay = new List<DisplayType>();
 		}
 		
+		public int GetSliderCount()
+		{
+			return sliders.Count;
+		}
+		
 		public void AddSlider(double value)
 		{
 			sliders.Add(value);
@@ -310,6 +315,10 @@ namespace Fractal_Terrain_Project
 		public void SetSlider(int index, double value)
 		{
 			sliders[index] = value;
+		}
+		public void AdjustSlider(int index, double value)
+		{
+			sliders[index] += value;
 		}
 		
 		public abstract override string ToString();
@@ -372,7 +381,7 @@ namespace Fractal_Terrain_Project
 		
 		public override string ToString()
 		{
-			return  (is3D ? "3D " : "") + strangeAttractorType + " Attractor:\n\tMaxIteration: " + maxIteration + "\n\tdT: " + t + "\n\tA: " + GetSlider(0) + "\n\tB: " + GetSlider(1) + "\n\tC: " + GetSlider(1) + "\n\tD: " + GetSlider(3) + "\n";
+			return  (is3D ? "3D " : "") + strangeAttractorType + " Attractor:\n\tMaxIteration: " + maxIteration + "\n\tdT: " + t + "\n\tA: " + GetSlider(0) + "\n\tB: " + GetSlider(1) + "\n\tC: " + GetSlider(2)/* + "\n\tD: " + GetSlider(3)*/ + "\n\tX Bounds: " + minX + ", " + maxX + "\n\tY Bounds: " + minY + ", " + maxY + "\n\tZ Bounds: " + minZ + ", " + maxZ + '\n';
 		}
 		
 		public override void Generate()
@@ -889,9 +898,9 @@ namespace Fractal_Terrain_Project
 			this.initialIterations = initialIterations;
 			this.maxIteration = maxIteration;
 			this.t = t;
-			sliders.Add(a);
-			sliders.Add(b);
-			sliders.Add(c);
+			AddSlider(a);
+			AddSlider(b);
+			AddSlider(c);
 			this.dynamicDraw = dynamicDraw;
 			this.is3D = is3D;
 			
@@ -925,10 +934,10 @@ namespace Fractal_Terrain_Project
 			this.startPoint = startPoint;
 			this.initialIterations = initialIterations;
 			this.maxIteration = maxIteration;
-			sliders.Add(a);
-            sliders.Add(b);
-            sliders.Add(c);
-            sliders.Add(d);
+			AddSlider(a);
+			AddSlider(b);
+			AddSlider(c);
+			AddSlider(d);
 			this.dynamicDraw = dynamicDraw;
 			this.is3D = is3D;
 			
@@ -1028,21 +1037,20 @@ namespace Fractal_Terrain_Project
 	
 	public sealed class TerrainMap : Plot
 	{
-		TriangleMesh triangles;
-		QuadMesh quads;
-		
 		Bitmap heightMap;
 		NoiseType noiseType;
-		int xRes = 400;
-		int yRes = 400;
+		int xRes = 100;
+		int yRes = 100;
 		
 		double maxTerrainHeight = 10;
 		double minTerrainHeight = -10;
 		
 		public TerrainMap(double minTerrainHeight = -10, double maxTerrainHeight = 10)
 		{
-			triangles = new TriangleMesh();
-			quadMesh = new QuadMesh();
+			is3D = true;
+			
+			triangleMesh = new TriangleMesh(new List<Triangle>());
+			quadMesh = new QuadMesh(new List<Quad>());
 			
 			noiseType = NoiseType.NONE;
 			
@@ -1053,8 +1061,10 @@ namespace Fractal_Terrain_Project
 		}
 		public TerrainMap(NoiseType noiseType, double minTerrainHeight = -10, double maxTerrainHeight = 10)
 		{
-			triangles = new TriangleMesh();
-			quadMesh = new QuadMesh();
+			is3D = true;
+			
+			triangleMesh = new TriangleMesh(new List<Triangle>());
+			quadMesh = new QuadMesh(new List<Quad>());
 			
 			this.noiseType = noiseType;
 			
@@ -1065,8 +1075,10 @@ namespace Fractal_Terrain_Project
 		}
 		public TerrainMap(int xRes, int yRes, double minTerrainHeight = -10, double maxTerrainHeight = 10)
 		{
-			triangles = new TriangleMesh();
-			quadMesh = new QuadMesh();
+			is3D = true;
+			
+			triangleMesh = new TriangleMesh(new List<Triangle>());
+			quadMesh = new QuadMesh(new List<Quad>());
 			
 			noiseType = NoiseType.NONE;
 			
@@ -1080,8 +1092,10 @@ namespace Fractal_Terrain_Project
 		}
 		public TerrainMap(int xRes, int yRes, NoiseType noiseType, double minTerrainHeight = -10, double maxTerrainHeight = 10)
 		{
-			triangles = new TriangleMesh();
-			quadMesh = new QuadMesh();
+			is3D = true;
+			
+			triangleMesh = new TriangleMesh(new List<Triangle>());
+			quadMesh = new QuadMesh(new List<Quad>());
 			
 			this.noiseType = noiseType;
 			
@@ -1151,6 +1165,9 @@ namespace Fractal_Terrain_Project
 		
 		public override void Generate()
 		{
+			triangleMesh = new TriangleMesh(new List<Triangle>());
+			quadMesh = new QuadMesh(new List<Quad>());
+			
 			GenerateHeightmap();
 			
 			Point nwPoint = new Point(),
@@ -1158,24 +1175,30 @@ namespace Fractal_Terrain_Project
 				  sePoint = new Point(),
 				  swPoint = new Point();
 			
+			
+			var grid = new Point[xRes,yRes];
+			
+			// Create points
 			for (int i = 0; i < xRes - 1; i++)
-			{
+				for (int j = 0; j < yRes - 1; j++)
+					grid[i,j] = new Point(((double)i/xRes) * 20 - 10, ((double)j/xRes) * 20 - 10, heightMap.GetPixel(i, j).GetSaturation() * 20);
+			
+			for (int i = 0; i < xRes - 1; i++)
 				for (int j = 0; j < yRes - 1; j++)
 				{
 					//Create point values
-					nwPoint = new Point(i, j, heightMap.GetPixel(i, j).GetSaturation());
-					nePoint = new Point(i, j + 1, heightMap.GetPixel(i, j + 1).GetSaturation());
-					sePoint = new Point(i + 1, j + 1, heightMap.GetPixel(i + 1, j + 1).GetSaturation());
-					swPoint = new Point(i + 1, j, heightMap.GetPixel(i + 1, j).GetSaturation());
-		
+					nwPoint = grid[i,j];
+					nePoint = grid[i + 1,j];
+					sePoint = grid[i + 1,j + 1];
+					swPoint = grid[i,j + 1];
+					
 					//Create triangles
-					triangles.Add(new Triangle(nwPoint, nePoint, sePoint));
-					triangles.Add(new Triangle(nwPoint, sePoint, swPoint));
+					triangleMesh.Add(new Triangle(nwPoint, nePoint, sePoint));
+					triangleMesh.Add(new Triangle(nwPoint, sePoint, swPoint));
 		
 					// Create quad
-					quads.Add(new Quad(nwPoint, nePoint, sePoint, swPoint));
+					quadMesh.Add(new Quad(nwPoint, nePoint, sePoint, swPoint));
 				}
-			}
 		}
 		
 		public static Color PerlinNoise()
